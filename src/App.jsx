@@ -23,13 +23,9 @@ const birthday = {
     'Thank you for being my favorite part of so many ordinary days. There are still so many memories waiting for us, and I cannot wait to make them with you.',
     'Happy birthday, my special person. You deserve all the love in the world.',
   ],
-  photos: [
-    { src: '/memories/01.jpg', caption: 'The beginning of a beautiful story' },
-    { src: '/memories/02.jpg', caption: 'Our favorite kind of adventure' },
-    { src: '/memories/03.jpg', caption: 'A little moment. A big memory.' },
-    { src: '/memories/04.jpg', caption: 'The days I wish I could replay' },
-    { src: '/memories/05.jpg', caption: 'Here is to everything still to come' },
-  ],
+ photos: Object.entries(import.meta.glob('/public/memories/*.{jpg,jpeg,png,webp,gif,avif,JPG,JPEG,PNG,WEBP,GIF,AVIF}', { eager: true, query: '?url', import: 'default' }))
+    .sort(([first], [second]) => first.localeCompare(second, undefined, { numeric: true }))
+    .map(([, src], index) => ({ src, caption: `A memory to cherish. No. ${index + 1}` })),
 }
 
 const sceneNames = ['A little wish', 'Your day', 'A little love', 'Five reasons', 'Our memories', 'From the heart']
@@ -375,9 +371,16 @@ function GalleryScene({ next }) {
   const swipeStart = useRef(null)
   const changePhoto = (delta) => setIndex((current) => (current + delta + birthday.photos.length) % birthday.photos.length)
   useEffect(() => {
+    if (birthday.photos.length < 2) return
     const timer = setInterval(() => setIndex((current) => (current + 1) % birthday.photos.length), 6000)
     return () => clearInterval(timer)
   }, [])
+  if (birthday.photos.length === 0) return (
+    <div className="scene-content gallery-scene">
+      <h1 tabIndex={-1}>So many memories<br /><em>still to come.</em></h1>
+      <NextButton onClick={next}>One last little secret</NextButton>
+    </div>
+  )
   return (
     <div className="scene-content gallery-scene">
       <p className="eyebrow">THE MOMENTS THAT STAY</p>
