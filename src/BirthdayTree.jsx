@@ -2,14 +2,15 @@ import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
 const colors = [
-  { color: '#e98cad', highlight: '#ffe6f0', shade: '#b44e77' },
-  { color: '#f19b80', highlight: '#ffeadc', shade: '#bf604c' },
-  { color: '#f3ce70', highlight: '#fff4cb', shade: '#bf8839' },
-  { color: '#73c9bd', highlight: '#dcfff3', shade: '#308d87' },
-  { color: '#85b9ed', highlight: '#e2f3ff', shade: '#487eba' },
-  { color: '#b59cdb', highlight: '#f1e9ff', shade: '#8564ad' },
-  { color: '#a1cb8d', highlight: '#edfadd', shade: '#538754' },
-  { color: '#ed8290', highlight: '#ffe8e9', shade: '#b74452' },
+  //  { color: '#e98cad', highlight: '#ffe6f0', shade: '#b44e77' },
+  // { color: '#f19b80', highlight: '#ffeadc', shade: '#bf604c' },
+  // { color: '#f3ce70', highlight: '#fff4cb', shade: '#bf8839' },
+  // { color: '#73c9bd', highlight: '#dcfff3', shade: '#308d87' },
+  // { color: '#85b9ed', highlight: '#e2f3ff', shade: '#487eba' },
+  // { color: '#b59cdb', highlight: '#f1e9ff', shade: '#8564ad' },
+  // { color: '#a1cb8d', highlight: '#edfadd', shade: '#538754' },
+  // { color: '#ed8290', highlight: '#ffe8e9', shade: '#b74452' },
+  { color: '#ed8290', highlight: '#ffd7df', shade: '#8f1f34' },
 ]
 const branches = [
   [264, 585, 289, 455, 258, 310, 15, 0.5],
