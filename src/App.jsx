@@ -369,12 +369,12 @@ function LetterScene({ restart }) {
 function GalleryScene({ next }) {
   const [index, setIndex] = useState(0)
   const swipeStart = useRef(null)
-  const changePhoto = (delta) => setIndex((current) => (current + delta + birthday.photos.length) % birthday.photos.length)
+ const changePhoto = (delta) => setIndex((current) => (current + delta + birthday.photos.length) % birthday.photos.length)
   useEffect(() => {
     if (birthday.photos.length < 2) return
-    const timer = setInterval(() => setIndex((current) => (current + 1) % birthday.photos.length), 6000)
-    return () => clearInterval(timer)
-  }, [])
+    const timer = setTimeout(() => setIndex((current) => (current + 1) % birthday.photos.length), 5000)
+    return () => clearTimeout(timer)
+  }, [index])
   if (birthday.photos.length === 0) return (
     <div className="scene-content gallery-scene">
       <h1 tabIndex={-1}>So many memories<br /><em>still to come.</em></h1>
