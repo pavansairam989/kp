@@ -168,10 +168,5 @@ export default function BirthdayTree({ onComplete, theme = 'dark' }) {
     frame = requestAnimationFrame(paint)
     return () => { cancelAnimationFrame(frame); observer.disconnect(); repaint.current = null }
   }, [reduced])
-<<<<<<< Updated upstream
-  return <canvas className="birthday-tree" ref={canvasRef} role="img" aria-label="A growing tree with a rounded canopy of multicolored balloons" />
-}
-=======
   return <canvas className="birthday-tree" ref={canvasRef} role="img" aria-label="A growing tree with a rounded canopy of red balloons" />
 }
->>>>>>> Stashed changes
