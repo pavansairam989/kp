@@ -24,7 +24,7 @@ const birthday = {
     'Thank you for being my favorite part of so many ordinary days. There are still so many memories waiting for us, and I cannot wait to make them with you.',
     'Happy birthday, my special person. You deserve all the love in the world.',
   ],
-  photos: Object.entries(import.meta.glob('/public/memories/*.{jpg,jpeg,png,webp,gif,avif,JPG,JPEG,PNG,WEBP,GIF,AVIF}', { eager: true, query: '?url', import: 'default' }))
+  photos: Object.entries(import.meta.glob('/src/assets/memories/*.{jpg,jpeg,png,webp,gif,avif,JPG,JPEG,PNG,WEBP,GIF,AVIF}', { eager: true, query: '?url', import: 'default' }))
     .sort(([first], [second]) => first.localeCompare(second, undefined, { numeric: true }))
     .map(([, src], index) => ({ src, caption: `` })),
 }
