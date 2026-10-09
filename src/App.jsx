@@ -333,7 +333,7 @@ function BalloonsScene({ next }) {
       <div className="balloon-sky">
         <AnimatePresence>{birthday.reasons.map((reason, index) => !popped.includes(index) && <motion.button key={index} className={`floating-balloon balloon-${index}`} style={{ '--balloon-color': balloonColors[index], '--delay': `${index * -0.7}s` }} aria-label={`Pop balloon ${index + 1}`} exit={{ scale: [1, 1.25, 0], opacity: 0 }} transition={{ duration: 0.25 }} onClick={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setPopped((previous) => previous.includes(index) ? previous : [...previous, index]); celebrate({ x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight }, 45) }}><span className="balloon-body" /><span className="balloon-string" /></motion.button>)}</AnimatePresence>
       </div>
-      <div className="reasons-list" aria-live="polite">{popped.map((index) => <motion.article className="reason" key={index} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}><span>REASON NO. {index + 1}</span><p>{birthday.reasons[index]}</p><span className="reason-star" aria-hidden="true">✦</span></motion.article>)}</div>
+      <div className="reasons-list" aria-live="polite">{popped.map((index) => <motion.article className="reason" key={index} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}><p>{birthday.reasons[index]}</p><span className="reason-star" aria-hidden="true">✦</span></motion.article>)}</div>
       {popped.length === birthday.reasons.length ? <NextButton onClick={next}>Our little memory lane</NextButton> : <p className="moment-caption">{popped.length} / {birthday.reasons.length}</p>}
     </div>
   )
