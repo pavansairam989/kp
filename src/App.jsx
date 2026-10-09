@@ -234,7 +234,7 @@ function CakeScene({ next }) {
               </g>
             </motion.g>)}
             {cutLine && !cut && <g clipPath={`url(#${gradientId}-silhouette)`}><path className="cake-cut-line" d={`M${cutLine.start.x} ${cutLine.start.y} L${cutLine.end.x} ${cutLine.end.y}`} stroke="#8d455d" strokeWidth="2.5" strokeLinecap="round" /></g>}
-            {cutLine && !cut && <image href="/src/assets/knifecursor.svg" x={cutLine.end.x - 5} y={cutLine.end.y - 4} width="36" height="36" pointerEvents="none" />}
+            {cutLine && !cut && <image href="/src/assets/knife-cursor.svg" x={cutLine.end.x - 5} y={cutLine.end.y - 4} width="36" height="36" pointerEvents="none" />}
             {candleStage === 'blowing' && <g className="candle-air" fill="none" stroke="var(--text)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               {['M42 56 Q88 39 130 54 T196 57', 'M61 73 Q112 61 149 71 T214 68', 'M79 36 Q119 24 161 39 T211 42'].map((path, index) => <motion.path key={path} d={path} initial={{ pathLength: 0, opacity: 0, x: -18 }} animate={{ pathLength: [0, 1, 1], opacity: [0, 0.65, 0], x: reduced ? 0 : [-18, 8, 18] }} transition={{ duration: reduced ? 0.1 : 1.05, delay: reduced ? 0 : index * 0.1, ease: 'easeOut' }} onAnimationComplete={() => { if (index === 2) setCandleStage('out') }} />)}
             </g>}
@@ -248,7 +248,7 @@ function CakeScene({ next }) {
       <div className="cake-actions">
         {candleStage !== 'out' && <button type="button" className="next-button blow-button" disabled={candleStage === 'blowing'} onClick={() => setCandleStage('blowing')}><Wind size={19} aria-hidden="true" />{candleStage === 'blowing' ? 'Blowing...' : 'Blow'}</button>}
         {candleStage === 'out' && !cut && <motion.div className="ready-knife-wrap" initial={{ opacity: 0, y: reduced ? 0 : 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0.1 : 0.45 }}>
-          <img className="ready-knife" src="/src/assets/knifecursor.svg" width="48" height="48" alt="" aria-hidden="true" />
+          <img className="ready-knife" src="/src/assets/knife-cursor.svg" width="48" height="48" alt="" aria-hidden="true" />
           <span className="ready-knife-text">the cake</span>
         </motion.div>}
         {cut && <NextButton onClick={next} disabled={!complete}>{complete ? 'There is more to celebrate' : 'Serving your slice...'}</NextButton>}
