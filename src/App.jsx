@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Gift, Moon, Sun, Volume2, VolumeX, Wind } from '
 import confetti from 'canvas-confetti'
 import birthdayMusic from './music/leberch-happy-birthday-581704.mp3'
 import BirthdayTree from './BirthdayTree'
+import hugsyImage from './assets/hugsy.png'
 import './App.css'
 
 const birthday = {
@@ -15,7 +16,7 @@ const birthday = {
     'You make even the difficult days feel lighter and brighter.',
     'You are the light for my dark days.',
     'You turn the smallest moments into beautiful memories.',
-    'Being yourself is more than enough. Always.',
+    'Being yourself is more than enough. Always.'
   ],
   letter: [
     'Today is about you. Your kindness, your beautiful heart, and all the little things that make you so wonderfully you.',
@@ -23,9 +24,9 @@ const birthday = {
     'Thank you for being my favorite part of so many ordinary days. There are still so many memories waiting for us, and I cannot wait to make them with you.',
     'Happy birthday, my special person. You deserve all the love in the world.',
   ],
- photos: Object.entries(import.meta.glob('/public/memories/*.{jpg,jpeg,png,webp,gif,avif,JPG,JPEG,PNG,WEBP,GIF,AVIF}', { eager: true, query: '?url', import: 'default' }))
+  photos: Object.entries(import.meta.glob('/public/memories/*.{jpg,jpeg,png,webp,gif,avif,JPG,JPEG,PNG,WEBP,GIF,AVIF}', { eager: true, query: '?url', import: 'default' }))
     .sort(([first], [second]) => first.localeCompare(second, undefined, { numeric: true }))
-    .map(([, src], index) => ({ src, caption: `A memory to cherish. No. ${index + 1}` })),
+    .map(([, src], index) => ({ src, caption: `` })),
 }
 
 const sceneNames = ['A little wish', 'Your day', 'A little love', 'Five reasons', 'Our memories', 'From the heart']
@@ -125,6 +126,25 @@ function splitCake(start, end) {
   return { normal, lineStart, lineEnd, parts }
 }
 
+function HugsyPenguin({ candleStage, cut, cutting, reduced }) {
+  const blowing = candleStage === 'blowing'
+  const cheering = cut
+  return (
+    <motion.div className={`hugsy-penguin ${blowing ? 'hugsy-blowing' : ''} ${cutting ? 'hugsy-cutting' : ''} ${cheering ? 'hugsy-cheering' : ''}`} animate={{ y: reduced ? 0 : [0, -5, 0] }} transition={{ duration: reduced ? 0.01 : 2.2, repeat: Infinity, ease: 'easeInOut' }} aria-hidden="true">
+      <img className="hugsy-image" src={hugsyImage} alt="" draggable={false} />
+      {blowing && <svg className="hugsy-breeze" viewBox="0 0 120 60" role="presentation" focusable="false">
+        <path d="M6 20 C28 10 48 9 70 16" />
+        <path d="M8 36 C30 28 54 28 76 35" />
+      </svg>}
+      {/* {(cutting || cheering) && 
+      <motion.svg className="hugsy-knife" viewBox="0 0 58 18" role="presentation" focusable="false" animate={{ rotate: cutting ? [0, -14, 0] : [0, 11, 0], x: cutting ? [0, -2, 0] : [0, 2, 0] }} transition={{ duration: reduced ? 0.01 : (cutting ? 0.38 : 0.9), repeat: Infinity, ease: 'easeInOut' }}>
+        <rect x="0" y="5" width="24" height="8" rx="3" />
+        <path d="M24 5 L57 9 L24 13 Z" />
+      </motion.svg>} */}
+    </motion.div>
+  )
+}
+
 function CakeScene({ next }) {
   const [candleStage, setCandleStage] = useState('lit')
   const [cut, setCut] = useState(false)
@@ -134,6 +154,7 @@ function CakeScene({ next }) {
   const cakeRef = useRef(null)
   const gradientId = useId()
   const reduced = useReducedMotion()
+  const cutting = Boolean(cutLine) && !cut
   const split = cut && cutLine ? splitCake(cutLine.start, cutLine.end) : null
   const parts = split?.parts ?? [{ side: 0 }]
   useEffect(() => {
@@ -165,65 +186,71 @@ function CakeScene({ next }) {
       <p className="eyebrow">A LITTLE SOMETHING, JUST FOR YOU</p>
       <h1 tabIndex={-1}>Happy birthday,<br /><em>{birthday.name}.</em></h1>
       <p className="scene-copy">First, a wish. Then, something sweet.</p>
-      <button ref={cakeRef} className={`cake-button candle-${candleStage} ${cut ? 'cut' : ''}`} aria-label={candleStage === 'out' ? 'Press and slide across the cake to cut a slice, or press Enter' : 'Birthday cake; blow out the candle before cutting'} disabled={cut || candleStage !== 'out'} onPointerDown={(event) => {
-        if (event.button !== 0 || cut || candleStage !== 'out') return
-        const rect = event.currentTarget.getBoundingClientRect()
-        const pointerX = (event.clientX - rect.left) / rect.width * 400
-        const pointerY = (event.clientY - rect.top) / rect.height * 290
-        if (pointerX < 80 || pointerX > 320 || pointerY < 105 || pointerY > 240) return
-        const point = cakePoint(event)
-        event.currentTarget.setPointerCapture(event.pointerId)
-        dragStart.current = point
-        setCutLine({ start: point, end: point })
-      }} onPointerMove={moveKnife} onPointerUp={(event) => {
-        if (!dragStart.current || cut) return
-        const start = dragStart.current
-        const end = cakePoint(event)
-        if (Math.hypot(end.x - start.x, end.y - start.y) >= 45) finishCut(start, end)
-        else { dragStart.current = null; setCutLine(null) }
-      }} onPointerCancel={() => { dragStart.current = null; if (!cut) setCutLine(null) }} onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); finishCut({ x: 205, y: 125 }, { x: 295, y: 190 }) }
-      }}>
-        <svg className="cake-art" viewBox="0 0 400 290" role="img" aria-label={`Pink birthday cake with ${candleStage === 'out' ? 'an extinguished' : 'a lit'} candle`}>
-          <defs>
-            <linearGradient id={`${gradientId}-sponge`} x2="0" y2="1"><stop stopColor="#f9c4cb" /><stop offset="1" stopColor="#c57489" /></linearGradient>
-            <linearGradient id={`${gradientId}-icing`} x2="0" y2="1"><stop stopColor="#fff0e7" /><stop offset="1" stopColor="#f7c6ce" /></linearGradient>
-            <clipPath id={`${gradientId}-silhouette`}><path d="M80 135 A120 30 0 0 1 320 135 L320 230 Q200 256 80 230Z" /></clipPath>
-            <clipPath id={`${gradientId}-cream`}><rect x="60" y="179" width="280" height="15" /></clipPath>
-            {split && parts.map((part) => <clipPath key={part.side} id={`${gradientId}-part-${part.side}`}><polygon points={part.points} /></clipPath>)}
-            <g id={`${gradientId}-body`}>
-              <path d="M80 135 L80 230 Q200 256 320 230 L320 135Z" fill={`url(#${gradientId}-sponge)`} />
-              <path d="M80 176 Q200 200 320 176 L320 195 Q200 222 80 195Z" fill="#f8d8c5" />
-              <ellipse cx="200" cy="135" rx="120" ry="30" fill={`url(#${gradientId}-icing)`} />
-              <path d="M80 137 Q96 153 107 148 L107 160 Q115 180 124 158 L124 152 Q143 156 153 151 L153 169 Q164 186 172 165 L172 156 Q205 165 235 155 L235 165 Q245 179 252 160 L252 151 Q290 155 320 138" fill="#ffdfd8" />
-              <g className="candle"><rect x="195" y="68" width="10" height="66" rx="3" fill="#f4e9c9" /><path d="M195 83 L205 77 M195 103 L205 97 M195 123 L205 117" stroke="#d97a91" strokeWidth="3" /><path d="M200 68 L200 62" stroke="#67404a" strokeWidth="2" strokeLinecap="round" /><path className={`flame ${candleStage === 'blowing' ? 'flame-extinguishing' : candleStage === 'out' ? 'flame-out' : ''}`} d="M200 38 C179 61 193 72 200 71 C215 70 218 56 200 38" fill="#ffcc70" /></g>
-            </g>
-          </defs>
-          <ellipse cx="200" cy="249" rx="161" ry="15" fill="#c7a880" opacity=".25" />
-          <path d="M49 242 Q200 265 351 242" stroke="#f6e9d3" strokeWidth="9" strokeLinecap="round" fill="none" />
-          {parts.map((part) => <motion.g key={part.side} initial={{ x: 0, y: 0 }} animate={{ x: split ? split.normal.x * part.side * 26 : 0, y: split ? split.normal.y * part.side * 18 : 0 }} transition={{ duration: reduced ? 0.01 : 1.2, delay: reduced ? 0 : 0.15, ease: [0.2, 0.8, 0.2, 1] }} onAnimationComplete={() => { if (cut && part.side === 1) setComplete(true) }}>
-            <g clipPath={split ? `url(#${gradientId}-part-${part.side})` : undefined}>
-              <use href={`#${gradientId}-body`} />
-              {split && <g clipPath={`url(#${gradientId}-silhouette)`}>
-                <path d={`M${split.lineStart.x} ${split.lineStart.y} L${split.lineEnd.x} ${split.lineEnd.y}`} stroke="#d4a17c" strokeWidth="14" />
-                <g clipPath={`url(#${gradientId}-cream)`}><path d={`M${split.lineStart.x} ${split.lineStart.y} L${split.lineEnd.x} ${split.lineEnd.y}`} stroke="#fff0dc" strokeWidth="14" /></g>
-              </g>}
-            </g>
-          </motion.g>)}
-          {cutLine && !cut && <g clipPath={`url(#${gradientId}-silhouette)`}><path className="cake-cut-line" d={`M${cutLine.start.x} ${cutLine.start.y} L${cutLine.end.x} ${cutLine.end.y}`} stroke="#8d455d" strokeWidth="2.5" strokeLinecap="round" /></g>}
-          {cutLine && !cut && <image href="/knife-cursor.svg" x={cutLine.end.x - 5} y={cutLine.end.y - 4} width="36" height="36" pointerEvents="none" />}
-          {candleStage === 'blowing' && <g className="candle-air" fill="none" stroke="var(--text)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            {['M42 56 Q88 39 130 54 T196 57', 'M61 73 Q112 61 149 71 T214 68', 'M79 36 Q119 24 161 39 T211 42'].map((path, index) => <motion.path key={path} d={path} initial={{ pathLength: 0, opacity: 0, x: -18 }} animate={{ pathLength: [0, 1, 1], opacity: [0, 0.65, 0], x: reduced ? 0 : [-18, 8, 18] }} transition={{ duration: reduced ? 0.1 : 1.05, delay: reduced ? 0 : index * 0.1, ease: 'easeOut' }} onAnimationComplete={() => { if (index === 2) setCandleStage('out') }} />)}
-          </g>}
-          {candleStage !== 'lit' && !cut && <g className="candle-smoke" fill="none" stroke="var(--muted)" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-            {['M200 63 C190 51 212 45 201 32 C194 24 207 20 204 12', 'M204 63 C219 50 201 41 213 29'].map((path, index) => <motion.path key={path} d={path} initial={{ opacity: 0, y: 0, pathLength: 0 }} animate={{ opacity: [0, 0.55, 0], y: reduced ? 0 : -24, pathLength: [0, 1, 1] }} transition={{ duration: reduced ? 0.1 : 1.6, delay: reduced ? 0 : 0.6 + index * 0.12, ease: 'easeOut' }} />)}
-          </g>}
-        </svg>
-      </button>
+      <div className="cake-stage">
+        <HugsyPenguin candleStage={candleStage} cut={cut} cutting={cutting} reduced={reduced} />
+        <button ref={cakeRef} className={`cake-button candle-${candleStage} ${cut ? 'cut' : ''}`} aria-label={candleStage === 'out' ? 'Press and slide across the cake to cut a slice, or press Enter' : 'Birthday cake; blow out the candle before cutting'} disabled={cut || candleStage !== 'out'} onPointerDown={(event) => {
+          if (event.button !== 0 || cut || candleStage !== 'out') return
+          const rect = event.currentTarget.getBoundingClientRect()
+          const pointerX = (event.clientX - rect.left) / rect.width * 400
+          const pointerY = (event.clientY - rect.top) / rect.height * 290
+          if (pointerX < 80 || pointerX > 320 || pointerY < 105 || pointerY > 240) return
+          const point = cakePoint(event)
+          event.currentTarget.setPointerCapture(event.pointerId)
+          dragStart.current = point
+          setCutLine({ start: point, end: point })
+        }} onPointerMove={moveKnife} onPointerUp={(event) => {
+          if (!dragStart.current || cut) return
+          const start = dragStart.current
+          const end = cakePoint(event)
+          if (Math.hypot(end.x - start.x, end.y - start.y) >= 45) finishCut(start, end)
+          else { dragStart.current = null; setCutLine(null) }
+        }} onPointerCancel={() => { dragStart.current = null; if (!cut) setCutLine(null) }} onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); finishCut({ x: 205, y: 125 }, { x: 295, y: 190 }) }
+        }}>
+          <svg className="cake-art" viewBox="0 0 400 290" role="img" aria-label={`Pink birthday cake with ${candleStage === 'out' ? 'an extinguished' : 'a lit'} candle`}>
+            <defs>
+              <linearGradient id={`${gradientId}-sponge`} x2="0" y2="1"><stop stopColor="#f9c4cb" /><stop offset="1" stopColor="#c57489" /></linearGradient>
+              <linearGradient id={`${gradientId}-icing`} x2="0" y2="1"><stop stopColor="#fff0e7" /><stop offset="1" stopColor="#f7c6ce" /></linearGradient>
+              <clipPath id={`${gradientId}-silhouette`}><path d="M80 135 A120 30 0 0 1 320 135 L320 230 Q200 256 80 230Z" /></clipPath>
+              <clipPath id={`${gradientId}-cream`}><rect x="60" y="179" width="280" height="15" /></clipPath>
+              {split && parts.map((part) => <clipPath key={part.side} id={`${gradientId}-part-${part.side}`}><polygon points={part.points} /></clipPath>)}
+              <g id={`${gradientId}-body`}>
+                <path d="M80 135 L80 230 Q200 256 320 230 L320 135Z" fill={`url(#${gradientId}-sponge)`} />
+                <path d="M80 176 Q200 200 320 176 L320 195 Q200 222 80 195Z" fill="#f8d8c5" />
+                <ellipse cx="200" cy="135" rx="120" ry="30" fill={`url(#${gradientId}-icing)`} />
+                <path d="M80 137 Q96 153 107 148 L107 160 Q115 180 124 158 L124 152 Q143 156 153 151 L153 169 Q164 186 172 165 L172 156 Q205 165 235 155 L235 165 Q245 179 252 160 L252 151 Q290 155 320 138" fill="#ffdfd8" />
+                <g className="candle"><rect x="195" y="68" width="10" height="66" rx="3" fill="#f4e9c9" /><path d="M195 83 L205 77 M195 103 L205 97 M195 123 L205 117" stroke="#d97a91" strokeWidth="3" /><path d="M200 68 L200 62" stroke="#67404a" strokeWidth="2" strokeLinecap="round" /><path className={`flame ${candleStage === 'blowing' ? 'flame-extinguishing' : candleStage === 'out' ? 'flame-out' : ''}`} d="M200 38 C179 61 193 72 200 71 C215 70 218 56 200 38" fill="#ffcc70" /></g>
+              </g>
+            </defs>
+            <ellipse cx="200" cy="249" rx="161" ry="15" fill="#c7a880" opacity=".25" />
+            <path d="M49 242 Q200 265 351 242" stroke="#f6e9d3" strokeWidth="9" strokeLinecap="round" fill="none" />
+            {parts.map((part) => <motion.g key={part.side} initial={{ x: 0, y: 0 }} animate={{ x: split ? split.normal.x * part.side * 26 : 0, y: split ? split.normal.y * part.side * 18 : 0 }} transition={{ duration: reduced ? 0.01 : 1.2, delay: reduced ? 0 : 0.15, ease: [0.2, 0.8, 0.2, 1] }} onAnimationComplete={() => { if (cut && part.side === 1) setComplete(true) }}>
+              <g clipPath={split ? `url(#${gradientId}-part-${part.side})` : undefined}>
+                <use href={`#${gradientId}-body`} />
+                {split && <g clipPath={`url(#${gradientId}-silhouette)`}>
+                  <path d={`M${split.lineStart.x} ${split.lineStart.y} L${split.lineEnd.x} ${split.lineEnd.y}`} stroke="#d4a17c" strokeWidth="14" />
+                  <g clipPath={`url(#${gradientId}-cream)`}><path d={`M${split.lineStart.x} ${split.lineStart.y} L${split.lineEnd.x} ${split.lineEnd.y}`} stroke="#fff0dc" strokeWidth="14" /></g>
+                </g>}
+              </g>
+            </motion.g>)}
+            {cutLine && !cut && <g clipPath={`url(#${gradientId}-silhouette)`}><path className="cake-cut-line" d={`M${cutLine.start.x} ${cutLine.start.y} L${cutLine.end.x} ${cutLine.end.y}`} stroke="#8d455d" strokeWidth="2.5" strokeLinecap="round" /></g>}
+            {cutLine && !cut && <image href="/src/assets/knife-cursor.svg" x={cutLine.end.x - 5} y={cutLine.end.y - 4} width="36" height="36" pointerEvents="none" />}
+            {candleStage === 'blowing' && <g className="candle-air" fill="none" stroke="var(--text)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              {['M42 56 Q88 39 130 54 T196 57', 'M61 73 Q112 61 149 71 T214 68', 'M79 36 Q119 24 161 39 T211 42'].map((path, index) => <motion.path key={path} d={path} initial={{ pathLength: 0, opacity: 0, x: -18 }} animate={{ pathLength: [0, 1, 1], opacity: [0, 0.65, 0], x: reduced ? 0 : [-18, 8, 18] }} transition={{ duration: reduced ? 0.1 : 1.05, delay: reduced ? 0 : index * 0.1, ease: 'easeOut' }} onAnimationComplete={() => { if (index === 2) setCandleStage('out') }} />)}
+            </g>}
+            {candleStage !== 'lit' && !cut && <g className="candle-smoke" fill="none" stroke="var(--muted)" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+              {['M200 63 C190 51 212 45 201 32 C194 24 207 20 204 12', 'M204 63 C219 50 201 41 213 29'].map((path, index) => <motion.path key={path} d={path} initial={{ opacity: 0, y: 0, pathLength: 0 }} animate={{ opacity: [0, 0.55, 0], y: reduced ? 0 : -24, pathLength: [0, 1, 1] }} transition={{ duration: reduced ? 0.1 : 1.6, delay: reduced ? 0 : 0.6 + index * 0.12, ease: 'easeOut' }} />)}
+            </g>}
+          </svg>
+        </button>
+      </div>
       <p className="moment-caption" aria-live="polite">{cut ? 'A slice of happiness. A sweet year ahead.' : candleStage === 'lit' ? 'Close your eyes. Make a wish.' : candleStage === 'blowing' ? 'Sending your wish into the world...' : 'Your wish is on its way. A little sweetness next.'}</p>
       <div className="cake-actions">
         {candleStage !== 'out' && <button type="button" className="next-button blow-button" disabled={candleStage === 'blowing'} onClick={() => setCandleStage('blowing')}><Wind size={19} aria-hidden="true" />{candleStage === 'blowing' ? 'Blowing...' : 'Blow'}</button>}
-        {candleStage === 'out' && !cut && <motion.img className="ready-knife" src="/knife-cursor.svg" width="48" height="48" alt="" aria-hidden="true" initial={{ opacity: 0, y: reduced ? 0 : 10, rotate: reduced ? 0 : -20 }} animate={{ opacity: 1, y: 0, rotate: 0 }} transition={{ duration: reduced ? 0.1 : 0.45 }} />}
+        {candleStage === 'out' && !cut && <motion.div className="ready-knife-wrap" initial={{ opacity: 0, y: reduced ? 0 : 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0.1 : 0.45 }}>
+          <img className="ready-knife" src="/src/assets/knife-cursor.svg" width="48" height="48" alt="" aria-hidden="true" />
+          <span className="ready-knife-text">the cake</span>
+        </motion.div>}
         {cut && <NextButton onClick={next} disabled={!complete}>{complete ? 'There is more to celebrate' : 'Serving your slice...'}</NextButton>}
       </div>
     </div>
@@ -369,7 +396,7 @@ function LetterScene({ restart }) {
 function GalleryScene({ next }) {
   const [index, setIndex] = useState(0)
   const swipeStart = useRef(null)
- const changePhoto = (delta) => setIndex((current) => (current + delta + birthday.photos.length) % birthday.photos.length)
+  const changePhoto = (delta) => setIndex((current) => (current + delta + birthday.photos.length) % birthday.photos.length)
   useEffect(() => {
     if (birthday.photos.length < 2) return
     const timer = setTimeout(() => setIndex((current) => (current + 1) % birthday.photos.length), 5000)
