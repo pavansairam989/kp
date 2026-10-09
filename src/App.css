@@ -54,7 +54,7 @@ h1 em { color: var(--gold); font-weight: 400; }
 .star.sparkle { background: none; color: #e6b371; font-size: 15px; width: 15px; height: 15px; }
 @keyframes twinkle { 0%,100% { opacity: .15; transform: translateY(0); } 50% { opacity: .8; transform: translateY(-5px); } }
 .scene-progress { display: flex; gap: 7px; }.scene-progress span { width: 21px; height: 2px; background: #ffffff20; }.scene-progress .active { background: var(--gold); }.scene-progress .complete { background: #e5b57b70; }
-.cake-button { display: block; width: min(360px, 100%); margin: 24px auto 0; padding: 0; border: 0; background: none; cursor: url('/src/assets/knife-cursor.svg') 5 4, crosshair; touch-action: none; user-select: none; -webkit-user-select: none; }
+.cake-button { display: block; width: min(360px, 100%); margin: 24px auto 0; padding: 0; border: 0; background: none; cursor: url('/knife-cursor.svg') 5 4, crosshair; touch-action: none; user-select: none; -webkit-user-select: none; }
 .cake-button.cut { cursor: default; }
 .cake-scene .cake-button { width: min(440px, 100%); }
 .cake-button:disabled { cursor: default; }
