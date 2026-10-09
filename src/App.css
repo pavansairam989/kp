@@ -80,7 +80,59 @@ h1 em { color: var(--gold); font-weight: 400; }
 @keyframes hugsy-breeze { 0% { opacity: 0; transform: translateX(-6px); } 20% { opacity: .65; } 100% { opacity: 0; transform: translateX(22px); } }
 @keyframes hugsy-beak-puff { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15, .82); } }
 @keyframes hugsy-celebrate { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(.8deg); } }
-@media (max-width: 600px) { .cake-stage { min-height: 286px; margin-top: 0; }.cake-stage .cake-button { margin-top: 96px; width: min(330px, 100%); max-width: 100%; }.hugsy-penguin { width: min(320px, 96vw); top: -6px; }.hugsy-breeze { left: 60%; top: 94px; width: 67px; }.hugsy-knife { left: 70%; top: 165px; width: 42px; } }
+@media (max-width: 600px) {
+	.cake-stage {
+		width: min(100%, 420px);
+		min-height: 246px;
+		margin-top: 0;
+	}
+
+	.cake-stage .cake-button {
+		margin-top: 78px;
+		width: clamp(230px, 78vw, 290px);
+		max-width: 100%;
+	}
+
+	.hugsy-penguin {
+		width: clamp(210px, 72vw, 270px);
+		top: -4px;
+		left: 63%;
+	}
+
+	.hugsy-breeze {
+		left: 59%;
+		top: 76px;
+		width: 54px;
+	}
+
+	.hugsy-knife {
+		left: 69%;
+		top: 142px;
+		width: 36px;
+	}
+}
+
+@media (max-width: 420px) {
+	.cake-stage {
+		min-height: 226px;
+	}
+
+	.cake-stage .cake-button {
+		margin-top: 72px;
+		width: clamp(210px, 76vw, 260px);
+	}
+
+	.hugsy-penguin {
+		width: clamp(190px, 68vw, 240px);
+		left: 62%;
+		top: -2px;
+	}
+
+	.hugsy-breeze {
+		top: 70px;
+		width: 49px;
+	}
+}
 @media (max-height: 760px) and (min-width: 601px) { .cake-stage { min-height: 300px; }.cake-stage .cake-button { width: min(330px, 100%); margin-top: 100px; }.hugsy-penguin { width: min(350px, 76vw); top: -8px; }.hugsy-breeze { top: 102px; width: 72px; }.hugsy-knife { top: 176px; width: 46px; } }
 .cake-art { width: 100%; overflow: visible; display: block; }
 .cake-slice { transform-origin: 220px 190px; }
