@@ -14,15 +14,15 @@ const birthday = {
   reasons: [
     'Nobody understands me the way you do.',
     'You make even the difficult days feel lighter and brighter.',
-    'You are the light for my dark days.',
-    'You turn the smallest moments into beautiful memories.',
-    'Being yourself is more than enough. Always.'
+    'You are the light for my dark days🌝',
+    'You turn the smallest moments into beautiful memories👩‍❤️‍💋‍👨',
+    'Be yourself and dont stress about things which are not in your hand. Keep Cheerful always'
   ],
   letter: [
-    'Today is about you. Your kindness, your beautiful heart, and all the little things that make you so wonderfully you.',
+    'Today is about all about you nannalu. Your kindness, your beautiful heart, and all the little things that make you so wonderfully you.',
     'I hope this year brings you the kind of happiness that sneaks up on you: unexpected adventures, long conversations, and a hundred tiny reasons to smile.',
-    'Thank you for being my favorite part of so many ordinary days. There are still so many memories waiting for us, and I cannot wait to make them with you.',
-    'Happy birthday, my special person. You deserve all the love in the world.',
+    'Thank you for being my favorite part (not exactly part most) of so many ordinary days. There are still so many memories waiting for us, and I cannot wait to make them with you bangaram💕.',
+    'Happy birthday, my special person. You deserve all the love in the world nana.',
   ],
   photos: Object.entries(import.meta.glob('/src/assets/memories/*.{jpg,jpeg,png,webp,gif,avif,JPG,JPEG,PNG,WEBP,GIF,AVIF}', { eager: true, query: '?url', import: 'default' }))
     .sort(([first], [second]) => first.localeCompare(second, undefined, { numeric: true }))
