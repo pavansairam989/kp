@@ -29,7 +29,7 @@ const birthday = {
     .map(([, src], index) => ({ src, caption: `` })),
 }
 
-const sceneNames = ['A little wish', 'Your day', 'A little love', 'Five reasons', 'Our memories', 'From the heart']
+const sceneNames = ['A little love', 'Your day', 'A little wish', 'Five reasons', 'Our memories', 'From the heart']
 const chapterTransitions = [
   { enter: {}, exit: { scale: 0.98 }, duration: 0.45 },
   { enter: { scale: 0.94, y: 24 }, exit: { scale: 1.025, y: -12 }, duration: 0.65 },
@@ -346,7 +346,7 @@ function ArrowScene({ next }) {
         </button>
       </div>
       <p className="moment-caption" aria-live="polite">{hint}</p>
-      {hit ? <NextButton onClick={next}>A few reasons why</NextButton> : <p className="gesture-label">PULL BACK & RELEASE</p>}
+     {hit ? <NextButton onClick={next}>A birthday wish for you</NextButton> : <p className="gesture-label">PULL BACK & RELEASE</p>}
     </div>
   )
 }
@@ -522,9 +522,9 @@ function App() {
       <div inert={transitioning}>
         <AnimatePresence mode="wait" onExitComplete={() => { if (scene === -1) { setFlowersCleared(false); setUnwrapReady(false) } }}><motion.section className="scene" key={scene} aria-label={sceneNames[scene] ?? 'A surprise for you'} variants={chapterVariants(scene, reduced)} initial="hidden" animate="visible" exit="exit" onAnimationComplete={(phase) => { if (phase === 'visible') setTransitioning(false) }}>
           {scene === -1 && <IntroScene next={next} onFlowersCleared={() => setFlowersCleared(true)} onUnwrapReady={() => setUnwrapReady(true)} />}
-          {scene === 0 && <CakeScene next={next} />}
+          {scene === 0 && <ArrowScene next={next} />}
           {scene === 1 && <WishScene next={next} theme={theme} />}
-          {scene === 2 && <ArrowScene next={next} />}
+          {scene === 2 && <CakeScene next={next} />}
           {scene === 3 && <BalloonsScene next={next} />}
           {scene === 4 && <GalleryScene next={next} />}
           {scene === 5 && <LetterScene restart={() => { setTransitioning(true); setScene(-1); window.scrollTo({ top: 0 }) }} />}
