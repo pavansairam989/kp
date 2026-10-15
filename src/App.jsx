@@ -405,7 +405,7 @@ function GalleryScene({ next }) {
   if (birthday.photos.length === 0) return (
     <div className="scene-content gallery-scene">
       <h1 tabIndex={-1}>So many memories<br /><em>still to come.</em></h1>
-      <NextButton onClick={next}>One last little secret</NextButton>
+      <NextButton onClick={next}>One last thing</NextButton>
     </div>
   )
   return (
